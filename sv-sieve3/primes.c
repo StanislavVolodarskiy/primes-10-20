@@ -1,47 +1,6 @@
-// gcc -std=c11 -pedantic -Wall -Wextra -Werror -Wwrite-strings -Wconversion primes.c
-
 #include <string.h>
 
 #include <primes.h>
-
-uint8_t *small_primes(uint64_t n) {
-    n += 1 - (n & 1);
-    assert((n & 1) == 1);
-    uint64_t s = (n - 3) >> 1;
-    bool *sieve = malloc(s);
-    if (sieve == NULL) {
-        exit(1);
-    }
-    memset(sieve, true, s);
-    const uint32_t p_last = i64_isqrt(n - 1) + 1;
-
-    for (uint32_t p = 3; p < p_last; p += 2) {
-        uint64_t i0 = (p - 3) >> 1;
-        if (sieve[i0]) {
-            for (uint64_t i = i0 + p; i < s; i += p) {
-                sieve[i] = false;
-            }
-        }
-    }
-
-    unsigned m = 0;
-    uint64_t prev_i = 0;
-    uint64_t max_diff = 0;
-    for (uint64_t i = 0; i < s; ++i) {
-        if (sieve[i]) {
-            ++m;
-            if (i - prev_i > max_diff) {
-                max_diff = i - prev_i;
-            }
-            prev_i = i;
-            // printf("%" PRIu64 "\n", 3 + 2 * i);
-        }
-    }
-    printf("%u %" PRIu64 "\n", m, max_diff);
-    
-    free(sieve);
-    return NULL;
-}
 
 void fill_sieve(const Int86 *n, uint64_t s, bool sieve[/* s */]) {
     memset(sieve, true, s);
@@ -99,9 +58,6 @@ void sift(const Int86 *n, uint64_t s) {
 int main(int argc, char *argv[]) {
     Int86 n1; scan(&n1);
     Int86 n2; scan(&n2);
-
-    small_primes(i86_isqrt(&n2) + 1);
-    return 0;
 
     bool run_sift = (argc == 1) || (argv == NULL);
 

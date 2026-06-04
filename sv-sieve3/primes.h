@@ -8,6 +8,68 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+
+
+// TODO: it is slow
+uint32_t i64_isqrt(uint64_t a) {
+    uint32_t low = 0;
+    uint32_t high = (uint32_t)-1;
+
+    while (low + 1 < high) {
+        uint32_t mid = (low + high) >> 1;
+        if (a < ((uint64_t) mid) * mid) {
+            high = mid;
+        } else {
+            low = mid;
+        }
+    }
+    return low;
+}
+
+void i64_fill_sieve(uint64_t s, bool sieve[/* s */]) {
+    memset(sieve, true, s);
+    uint64_t n = 3 + (s << 1);
+    const uint32_t p_last = i64_isqrt(n - 1) + 1;
+
+    for (uint32_t p = 3; p < p_last; p += 2) {
+        uint64_t i0 = (p - 3) >> 1;
+        if (sieve[i0]) {
+            for (uint64_t i = i0 + p; i < s; i += p) {
+                sieve[i] = false;
+            }
+        }
+    }
+}
+
+void i64_fill_sieve_seg(uint64_t n, uint64_t s, bool sieve[/* s */]) {
+    assert ((n & 1) == 1);
+    memset(sieve, true, s);
+    uint64_t n2 = n + (s << 1);
+    const uint32_t p_last = i64_isqrt(n2 - 1) + 1;
+
+    assert(p_last <= n);
+
+    uint64_t m = (n + 1) >> 1;
+    for (uint32_t p = 3; p < p_last; p += 2) {
+        ++m;
+        uint64_t i0 = p - m % p;
+        if (i0 == p) {
+            i0 = 0;
+        }
+        for (uint64_t i = i0 + p; i < s; i += p) {
+            sieve[i] = false;
+        }
+    }
+}
+
+void i64_print_sieve_seg(uint64_t n, uint64_t s, bool sieve[/* s */]) {
+    for (uint64_t i = 0; i < s; ++i) {
+        if (sieve[i]) {
+            printf("%" PRIu64 "\n", n + (i << 1));
+        }
+    }
+}
 
 
 #define LOW_BITS 22
@@ -71,22 +133,6 @@ uint64_t i86_isqrt(const Int86 *a) {
         Int86 b;
         sqr(&b, mid);
         if (lt(a, &b)) {
-            high = mid;
-        } else {
-            low = mid;
-        }
-    }
-    return low;
-}
-
-// TODO: it is slow
-uint32_t i64_isqrt(uint64_t a) {
-    uint32_t low = 0;
-    uint32_t high = (uint32_t)-1;
-
-    while (low + 1 < high) {
-        uint32_t mid = (low + high) >> 1;
-        if (a < ((uint64_t) mid) * mid) {
             high = mid;
         } else {
             low = mid;

@@ -111,6 +111,20 @@ temp/sv-sieve3: sv-sieve3/primes.h sv-sieve3/primes.c
 		-Wconversion \
 		sv-sieve3/primes.c
 
+temp/sv-sieve3-64: sv-sieve3/primes.h sv-sieve3/primes-64.c
+	gcc \
+		-O2 \
+		-o temp/sv-sieve3-64 \
+		-std=c11 \
+		-Isv-sieve3 \
+		-pedantic \
+		-Wall \
+		-Wextra \
+		-Werror \
+		-Wwrite-strings \
+		-Wconversion \
+		sv-sieve3/primes-64.c
+
 .PHONY: check-sv-sieve3
 check-sv-sieve3: temp/sv-sieve3
 	cat benchmarks/foxfox.txt | python tools/check.py \
