@@ -2,7 +2,9 @@
 
 int main() {
     uint64_t n2;
-    scanf(" %" SCNu64, &n2);
+    if (scanf("%" SCNu64, &n2) != 1) {
+        return 1;
+    }
 
     if (2 < n2) {
         puts("2");

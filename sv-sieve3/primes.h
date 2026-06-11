@@ -72,7 +72,7 @@ void i64_fill_sieve_seg(uint64_t n, uint64_t s, bool sieve[/* s */]) {
         if (i0 == p) {
             i0 = 0;
         }
-        for (uint64_t i = i0 + p; i < s; i += p) {
+        for (uint64_t i = i0; i < s; i += p) {
             sieve[i] = false;
         }
     }
