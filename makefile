@@ -97,6 +97,21 @@ benchmark-danis: | benchmarks temp
 show-danis:
 	python danis/plot.py -f benchmarks/danis.txt
 
+temp/sv-gmp_nextprime: sv-gmp_nextprime/primes.c | temp
+	gcc \
+		-O2 \
+		-o temp/sv-gmp_nextprime \
+		-std=c11 \
+		-Isv-sieve3 \
+		-pedantic \
+		-Wall \
+		-Wextra \
+		-Werror \
+		-Wwrite-strings \
+		-Wconversion \
+		sv-gmp_nextprime/primes.c \
+		-lgmp
+
 temp/sv-sieve3: sv-sieve3/primes.h sv-sieve3/primes.c
 	gcc \
 		-O2 \
@@ -111,10 +126,10 @@ temp/sv-sieve3: sv-sieve3/primes.h sv-sieve3/primes.c
 		-Wconversion \
 		sv-sieve3/primes.c
 
-temp/sv-sieve3-64: sv-sieve3/primes.h sv-sieve3/primes-64.c
+temp/sv-sieve3-64-1: sv-sieve3/primes.h sv-sieve3/primes-64-1.c | temp
 	gcc \
 		-O2 \
-		-o temp/sv-sieve3-64 \
+		-o temp/sv-sieve3-64-1 \
 		-std=c11 \
 		-Isv-sieve3 \
 		-pedantic \
@@ -123,7 +138,31 @@ temp/sv-sieve3-64: sv-sieve3/primes.h sv-sieve3/primes-64.c
 		-Werror \
 		-Wwrite-strings \
 		-Wconversion \
-		sv-sieve3/primes-64.c
+		sv-sieve3/primes-64-1.c
+
+temp/sv-sieve3-64-2: sv-sieve3/primes.h sv-sieve3/primes-64-2.c | temp
+	gcc \
+		-O2 \
+		-o temp/sv-sieve3-64-2 \
+		-std=c11 \
+		-Isv-sieve3 \
+		-pedantic \
+		-Wall \
+		-Wextra \
+		-Werror \
+		-Wwrite-strings \
+		-Wconversion \
+		sv-sieve3/primes-64-2.c
+
+.PHONY: check-sv-sieve3-64-1
+check-sv-sieve3-64-1: temp/sv-sieve3-64-1 temp/sv-gmp_nextprime
+	bash -c "diff <(echo 1000003 | temp/sv-sieve3-64-1) <(echo 0 1000003 | temp/sv-gmp_nextprime)"
+	bash -c "diff <(echo 1000004 | temp/sv-sieve3-64-1) <(echo 0 1000004 | temp/sv-gmp_nextprime)"
+
+.PHONY: check-sv-sieve3-64-2
+check-sv-sieve3-64-2: temp/sv-sieve3-64-2 temp/sv-gmp_nextprime
+	bash -c "diff <(echo 1000003 | temp/sv-sieve3-64-2) <(echo 0 1000003 | temp/sv-gmp_nextprime)"
+	bash -c "diff <(echo 1000004 | temp/sv-sieve3-64-2) <(echo 0 1000004 | temp/sv-gmp_nextprime)"
 
 .PHONY: check-sv-sieve3
 check-sv-sieve3: temp/sv-sieve3

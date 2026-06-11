@@ -35,8 +35,23 @@ void i64_fill_sieve(uint64_t s, bool sieve[/* s */]) {
     for (uint32_t p = 3; p < p_last; p += 2) {
         uint64_t i0 = (p - 3) >> 1;
         if (sieve[i0]) {
-            for (uint64_t i = i0 + p; i < s; i += p) {
+            for (uint64_t i = ((uint64_t)p * p - 3) >> 1; i < s; i += p) {
                 sieve[i] = false;
+            }
+        }
+    }
+}
+
+void i64_fill_bit_sieve(uint64_t s, uint8_t sieve[/* (s + 7) / 8 */]) {
+    memset(sieve, (uint8_t)-1, (s + 7) / 8);
+    uint64_t n = 3 + (s << 1);
+    const uint32_t p_last = i64_isqrt(n - 1) + 1;
+
+    for (uint32_t p = 3; p < p_last; p += 2) {
+        uint64_t i0 = (p - 3) >> 1;
+        if (sieve[i0 >> 3] & (1 << (i0 & 7))) {
+            for (uint64_t i = ((uint64_t)p * p - 3) >> 1; i < s; i += p) {
+                sieve[i >> 3] &= (uint8_t)~(1U << (i & 7));
             }
         }
     }
@@ -71,6 +86,13 @@ void i64_print_sieve_seg(uint64_t n, uint64_t s, bool sieve[/* s */]) {
     }
 }
 
+void i64_print_bit_sieve_seg(uint64_t n, uint64_t s, uint8_t sieve[/* (s + 7) / 8 */]) {
+    for (uint64_t i = 0; i < s; ++i) {
+        if (sieve[i >> 3] & (1 << (i & 7))) {
+            printf("%" PRIu64 "\n", n + (i << 1));
+        }
+    }
+}
 
 #define LOW_BITS 22
 #define LOW_MASK ((1UL << LOW_BITS) - 1UL)
