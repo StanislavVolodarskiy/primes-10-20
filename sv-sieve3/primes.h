@@ -86,6 +86,27 @@ void i64_print_sieve_seg(uint64_t n, uint64_t s, bool sieve[/* s */]) {
     }
 }
 
+void i64_fill_bit_sieve_seg(uint64_t n, uint64_t s, uint8_t sieve[/* (s + 7) / 8 */]) {
+    assert ((n & 1) == 1);
+    memset(sieve, (uint8_t)-1, (s + 7) / 8);
+    uint64_t n2 = n + (s << 1);
+    const uint32_t p_last = i64_isqrt(n2 - 1) + 1;
+
+    assert(p_last <= n);
+
+    uint64_t m = (n + 1) >> 1;
+    for (uint32_t p = 3; p < p_last; p += 2) {
+        ++m;
+        uint64_t i0 = p - m % p;
+        if (i0 == p) {
+            i0 = 0;
+        }
+        for (uint64_t i = i0; i < s; i += p) {
+            sieve[i >> 3] &= (uint8_t)~(1U << (i & 7));
+        }
+    }
+}
+
 void i64_print_bit_sieve_seg(uint64_t n, uint64_t s, uint8_t sieve[/* (s + 7) / 8 */]) {
     for (uint64_t i = 0; i < s; ++i) {
         if (sieve[i >> 3] & (1 << (i & 7))) {
