@@ -33,7 +33,6 @@ int main() {
         if (sieve == NULL) {
             exit(1);
         }
-        // printf("%" PRIu64 " %" PRIu64 "\n", n1, n1 + d);
         i64_fill_bit_sieve_seg(n1, s, sieve);
         i64_print_bit_sieve_seg(n1, s, sieve);
 
