@@ -182,6 +182,20 @@ temp/sv-sieve3-64-4: sv-sieve3/primes.h sv-sieve3/primes-64-4.c | temp
 		-Wconversion \
 		sv-sieve3/primes-64-4.c
 
+temp/sv-sieve3-86-3: sv-sieve3/primes.h sv-sieve3/primes-86-3.c | temp
+	gcc \
+		-O2 \
+		-o temp/sv-sieve3-86-3 \
+		-std=c11 \
+		-Isv-sieve3 \
+		-pedantic \
+		-Wall \
+		-Wextra \
+		-Werror \
+		-Wwrite-strings \
+		-Wconversion \
+		sv-sieve3/primes-86-3.c
+
 .PHONY: check-sv-sieve3-64-1
 check-sv-sieve3-64-1: temp/sv-sieve3-64-1
 	bash -c "diff <(echo 1000003 | temp/sv-sieve3-64-1) <(echo 0 1000003 | python sv-sieve2/primes.py)"
@@ -205,6 +219,13 @@ check-sv-sieve3-64-4: temp/sv-sieve3-64-4
 	bash -c "diff <(echo 0 1000004 | temp/sv-sieve3-64-4) <(echo 0 1000004 | python sv-sieve2/primes.py)"
 	bash -c "diff <(echo 1000003 2000003 | temp/sv-sieve3-64-4) <(echo 1000003 2000003 | python sv-sieve2/primes.py)"
 	bash -c "diff <(echo 1000003 2000004 | temp/sv-sieve3-64-4) <(echo 1000003 2000004 | python sv-sieve2/primes.py)"
+
+.PHONY: check-sv-sieve3-86-3
+check-sv-sieve3-86-3: temp/sv-sieve3-86-3
+	bash -c "diff <(echo 0 1000003 | temp/sv-sieve3-86-3) <(echo 0 1000003 | python sv-sieve2/primes.py)"
+	bash -c "diff <(echo 0 1000004 | temp/sv-sieve3-86-3) <(echo 0 1000004 | python sv-sieve2/primes.py)"
+	bash -c "diff <(echo 1000003 2000003 | temp/sv-sieve3-86-3) <(echo 1000003 2000003 | python sv-sieve2/primes.py)"
+	bash -c "diff <(echo 1000003 2000004 | temp/sv-sieve3-86-3) <(echo 1000003 2000004 | python sv-sieve2/primes.py)"
 
 .PHONY: check-sv-sieve3
 check-sv-sieve3: temp/sv-sieve3

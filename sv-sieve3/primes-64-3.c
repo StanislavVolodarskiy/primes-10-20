@@ -21,7 +21,7 @@ int main() {
 
     while (n1 < n2) {
         uint64_t d = i64_isqrt(n1);
-        d += d & 1;
+        d += d & 1;  // make it next even
         if (n2 - n1 < d) {
             d = n2 - n1;
         }
@@ -30,7 +30,6 @@ int main() {
         if (sieve == NULL) {
             exit(1);
         }
-        // printf("%" PRIu64 " %" PRIu64 "\n", n1, n1 + d);
         i64_fill_sieve_seg(n1, s, sieve);
         i64_print_sieve_seg(n1, s, sieve);
 

@@ -130,6 +130,12 @@ bool lt(const Int86 *a, const Int86 *b) {
     return a->low < b->low;
 }
 
+bool le(const Int86 *a, const Int86 *b) {
+    if (a->high < b->high) { return true ; }
+    if (a->high > b->high) { return false; }
+    return a->low <= b->low;
+}
+
 void add(Int86 *a, uint64_t c) {
     const uint64_t low = a->low + c;
     a->low = low & LOW_MASK;
@@ -201,7 +207,7 @@ void to_decimal(const Int86 *a, DecInt24 *b) {
     b->high = high + low / DEC_BASE;
 }
 
-void print(FILE *f, const Int86 *a) {
+void i86_print(FILE *f, const Int86 *a) {
     DecInt24 b;
     to_decimal(a, &b);
     if (b.high == 0) {
@@ -240,6 +246,41 @@ void scan(Int86 *a) {
         } else {
             ungetc(c, stdin);
             break;
+        }
+    }
+}
+
+void i86_fill_sieve_seg(const Int86 *n, uint64_t s, bool sieve[/* s */]) {
+    assert ((n->low & 1) == 1);
+    memset(sieve, true, s);
+    Int86 n2 = *n; add(&n2, 2 * s);     // n2 = n + (s << 1)
+    add(&n2, (uint64_t)-1);
+    const uint64_t p_last = i86_isqrt(&n2) + 1;
+
+    // assert(p_last <= n);
+
+    Int86 m = *n; add(&m, 1); shr(&m);  // m = (n + 1) >> 1
+
+    for (uint64_t p = 3; p < p_last; p += 2) {
+        add(&m, 1);
+        uint64_t i0 = p - mod(&m, p);
+        if (i0 == p) {
+            i0 = 0;
+        }
+        for (uint64_t i = i0; i < s; i += p) {
+            sieve[i] = false;
+        }
+    }
+}
+
+// TODO: it is slow
+void i86_print_sieve_seg(const Int86 *n, uint64_t s, bool sieve[/* s */]) {
+    for (uint64_t i = 0; i < s; ++i) {
+        if (sieve[i]) {
+            Int86 p = *n;
+            add(&p, i << 1);  // n + (i << 1)
+            i86_print(stdout, &p);
+            puts("");
         }
     }
 }
