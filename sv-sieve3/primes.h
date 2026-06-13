@@ -86,7 +86,11 @@ void i64_print_sieve_seg(uint64_t n, uint64_t s, bool sieve[/* s */]) {
     }
 }
 
-void i64_fill_bit_sieve_seg(uint64_t n, uint64_t s, uint8_t sieve[/* (s + 7) / 8 */]) {
+void i64_fill_bit_sieve_seg(
+    uint64_t n,
+    uint64_t s,
+    uint8_t sieve[/* (s + 7) / 8 */]
+) {
     assert ((n & 1) == 1);
     memset(sieve, (uint8_t)-1, (s + 7) / 8);
     uint64_t n2 = n + (s << 1);
@@ -107,7 +111,11 @@ void i64_fill_bit_sieve_seg(uint64_t n, uint64_t s, uint8_t sieve[/* (s + 7) / 8
     }
 }
 
-void i64_print_bit_sieve_seg(uint64_t n, uint64_t s, uint8_t sieve[/* (s + 7) / 8 */]) {
+void i64_print_bit_sieve_seg(
+    uint64_t n,
+    uint64_t s,
+    uint8_t sieve[/* (s + 7) / 8 */]
+) {
     for (uint64_t i = 0; i < s; ++i) {
         if (sieve[i >> 3] & (1 << (i & 7))) {
             printf("%" PRIu64 "\n", n + (i << 1));
@@ -273,7 +281,11 @@ void i86_fill_sieve_seg(const Int86 *n, uint64_t s, bool sieve[/* s */]) {
     }
 }
 
-void i86_fill_bit_sieve_seg(const Int86 *n, uint64_t s, uint8_t sieve[/* (s + 7) / 8 */]) {
+void i86_fill_bit_sieve_seg(
+    const Int86 *n,
+    uint64_t s,
+    uint8_t sieve[/* (s + 7) / 8 */]
+) {
     assert ((n->low & 1) == 1);
     memset(sieve, (uint8_t)-1, (s + 7) / 8);
     Int86 n2 = *n; add(&n2, 2 * s);     // n2 = n + (s << 1)
@@ -296,6 +308,38 @@ void i86_fill_bit_sieve_seg(const Int86 *n, uint64_t s, uint8_t sieve[/* (s + 7)
     }
 }
 
+void i86_fill_bit_sieve_seg_p(
+    const uint8_t incs[],
+    const Int86 *n,
+    uint64_t s,
+    uint8_t sieve[/* (s + 7) / 8 */]
+) {
+    assert ((n->low & 1) == 1);
+    memset(sieve, (uint8_t)-1, (s + 7) / 8);
+    Int86 n2 = *n; add(&n2, 2 * s);     // n2 = n + (s << 1)
+    add(&n2, (uint64_t)-1);
+    const uint64_t p_last = i86_isqrt(&n2) + 1;
+
+    // assert(p_last <= n);
+
+    Int86 m = *n; add(&m, 3); shr(&m);  // m = (n + 3) >> 1
+    uint64_t p = 3;
+    for (uint32_t i = 0; ; ++i) {
+        if (p >= p_last) {
+            break;
+        }
+        uint64_t i0 = p - mod(&m, p);
+        if (i0 == p) {
+            i0 = 0;
+        }
+        for (uint64_t i = i0; i < s; i += p) {
+            sieve[i >> 3] &= (uint8_t)~(1U << (i & 7));
+        }
+        add(&m, incs[i]);
+        p += incs[i] << 1;
+    }
+}
+
 // TODO: it is slow
 void i86_print_sieve_seg(const Int86 *n, uint64_t s, bool sieve[/* s */]) {
     for (uint64_t i = 0; i < s; ++i) {
@@ -309,7 +353,11 @@ void i86_print_sieve_seg(const Int86 *n, uint64_t s, bool sieve[/* s */]) {
 }
 
 // TODO: it is slow
-void i86_print_bit_sieve_seg(const Int86 *n, uint64_t s, uint8_t sieve[/* (s + 7) / 8 */]) {
+void i86_print_bit_sieve_seg(
+    const Int86 *n,
+    uint64_t s,
+    uint8_t sieve[/* (s + 7) / 8 */]
+) {
     for (uint64_t i = 0; i < s; ++i) {
         if (sieve[i >> 3] & (1 << (i & 7))) {
             Int86 p = *n;

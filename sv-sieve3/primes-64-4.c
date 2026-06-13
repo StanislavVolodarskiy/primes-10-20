@@ -21,9 +21,6 @@ int main() {
 
     while (n1 < n2) {
         uint64_t d = i64_isqrt(n1);
-        if (d > 350000000) {
-            d = 350000000;
-        }
         d += d & 1;
         if (n2 - n1 < d) {
             d = n2 - n1;
