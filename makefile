@@ -221,11 +221,13 @@ check-sv-sieve3-64-4: temp/sv-sieve3-64-4
 	bash -c "diff <(echo 1000003 2000004 | temp/sv-sieve3-64-4) <(echo 1000003 2000004 | python sv-sieve2/primes.py)"
 
 .PHONY: check-sv-sieve3-86-3
-check-sv-sieve3-86-3: temp/sv-sieve3-86-3
+check-sv-sieve3-86-3: temp/sv-sieve3-86-3 temp/sv-sieve3-64-3
 	bash -c "diff <(echo 0 1000003 | temp/sv-sieve3-86-3) <(echo 0 1000003 | python sv-sieve2/primes.py)"
 	bash -c "diff <(echo 0 1000004 | temp/sv-sieve3-86-3) <(echo 0 1000004 | python sv-sieve2/primes.py)"
 	bash -c "diff <(echo 1000003 2000003 | temp/sv-sieve3-86-3) <(echo 1000003 2000003 | python sv-sieve2/primes.py)"
 	bash -c "diff <(echo 1000003 2000004 | temp/sv-sieve3-86-3) <(echo 1000003 2000004 | python sv-sieve2/primes.py)"
+	bash -c "diff <(echo 1000000000 1010000000 | temp/sv-sieve3-86-3) <(echo 1000000000 1010000000 | temp/sv-sieve3-64-3)"
+	bash -c "diff <(echo 100000000000 10010000000 | temp/sv-sieve3-86-3) <(echo 100000000000 10010000000 | temp/sv-sieve3-64-3)"
 
 .PHONY: check-sv-sieve3
 check-sv-sieve3: temp/sv-sieve3
