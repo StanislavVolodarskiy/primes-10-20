@@ -51,7 +51,10 @@ void small_primes(uint64_t n, Incs *incs) {
     }
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    bool dump_d = argc > 1;
+    (void)argv;
+
     Int86 n1; scan(&n1);
     Int86 n2; scan(&n2);
     uint64_t max_d; scanf("%" SCNu64, &max_d);
@@ -92,12 +95,14 @@ int main() {
         }
         assert((d & 1) == 0);
         uint64_t s = d >> 1;
-        // fprintf(stderr, "%" PRIu64 "\n", d);
 
         assert((n1.low & 1) != 0);
         uint8_t *sieve = malloc((s + 7) >> 3);
         if (sieve == NULL) {
             exit(1);
+        }
+        if (dump_d) {
+            fprintf(stderr, "d %" PRIu64 "\n", d);
         }
         i86_fill_bit_sieve_seg_p(incs.data, &n1, s, sieve);
         i86_print_bit_sieve_seg(&n1, s, sieve);

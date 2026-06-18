@@ -298,6 +298,9 @@ check-sv-sieve3-86-6: temp/sv-sieve3-86-6 temp/sv-sieve3-64-4
 	bash -c "diff <(echo 1000000000 1010000000 100000 | temp/sv-sieve3-86-6) <(echo 1000000000 1010000000 | temp/sv-sieve3-64-4)"
 	bash -c "diff <(echo 10000000000 10010000000 100000 | temp/sv-sieve3-86-6) <(echo 10000000000 10010000000 | temp/sv-sieve3-64-4)"
 
+.PHONY: check-sv-sieve3-86-all
+check-sv-sieve3-86-all: check-sv-sieve3-86-3 check-sv-sieve3-86-4 check-sv-sieve3-86-5 check-sv-sieve3-86-6
+
 .PHONY: check-sv-sieve3
 check-sv-sieve3: temp/sv-sieve3
 	cat benchmarks/foxfox.txt | python tools/check.py \

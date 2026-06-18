@@ -2,7 +2,10 @@
 
 #include <primes.h>
 
-int main() {
+int main(int argc, char *argv[]) {
+    bool dump_d = argc > 1;
+    (void)argv;
+
     Int86 n1; scan(&n1);
     Int86 n2; scan(&n2);
 
@@ -35,6 +38,9 @@ int main() {
         bool *sieve = malloc(s);
         if (sieve == NULL) {
             exit(1);
+        }
+        if (dump_d) {
+            fprintf(stderr, "d %" PRIu64 "\n", d);
         }
         i86_fill_sieve_seg(&n1, s, sieve);
         i86_print_sieve_seg(&n1, s, sieve);
