@@ -298,11 +298,30 @@ check-sv-sieve3-86-6: temp/sv-sieve3-86-6 temp/sv-sieve3-64-4
 	bash -c "diff <(echo 1000000000 1010000000 100000 | temp/sv-sieve3-86-6) <(echo 1000000000 1010000000 | temp/sv-sieve3-64-4)"
 	bash -c "diff <(echo 10000000000 10010000000 100000 | temp/sv-sieve3-86-6) <(echo 10000000000 10010000000 | temp/sv-sieve3-64-4)"
 
+.PHONY: check-sv-sieve3-64-all
+check-sv-sieve3-64-all: check-sv-sieve3-64-1 check-sv-sieve3-64-2 check-sv-sieve3-64-3 check-sv-sieve3-64-4
+
 .PHONY: check-sv-sieve3-86-all
 check-sv-sieve3-86-all: check-sv-sieve3-86-3 check-sv-sieve3-86-4 check-sv-sieve3-86-5 check-sv-sieve3-86-6
+
+.PHONY: check-sv-sieve3-all
+check-sv-sieve3-all: check-sv-sieve3-64-all check-sv-sieve3-86-all
 
 .PHONY: check-sv-sieve3
 check-sv-sieve3: temp/sv-sieve3
 	cat benchmarks/foxfox.txt | python tools/check.py \
 		-c1 "echo {} {} | temp/sv-sieve3" \
 		-c2 "echo {} {} | python foxfox/primes.py"
+
+.PHONY: remove-sv-sieve3-86-6
+remove-sv-sieve3-86-6:
+	rm -f benchmarks/sv-sieve3-86-6.txt
+
+.PHONY: benchmark-sv-sieve3-86-6
+benchmark-sv-sieve3-86-6: | benchmarks temp temp/sv-sieve3-86-6
+	python sv-sieve3/benchmark-86-6.py -f benchmarks/sv-sieve3-86-6.txt
+
+.PHONY: show-sv-sieve3-86-6
+show-sv-sieve3-86-6:
+	python sv-sieve3/plot.py -f benchmarks/sv-sieve3-86-6.txt
+

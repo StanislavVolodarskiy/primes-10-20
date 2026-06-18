@@ -30,7 +30,7 @@ def update_table(fname, n1, n2, t):
         print(n1, n2, t, file=f)
 
 
-def main(scheme, command):
+def main(scheme, main_command, init_command=None):
     parser = argparse.ArgumentParser(description='sv-baseline benchmark')
     parser.add_argument(
         '-n',
@@ -48,4 +48,8 @@ def main(scheme, command):
         for _ in range(k - k_now): 
             print(*key, '...')
             if not args.n:
-                update_table(args.f, *key, elapsed(*key, command))
+                init_time = 0
+                if init_command is not None:
+                    init_time = elapsed(*key, init_command)
+                main_time = elapsed(*key, main_command)
+                update_table(args.f, *key, main_time - init_time)
