@@ -57,7 +57,10 @@ int main(int argc, char *argv[]) {
 
     Int86 n1; scan(&n1);
     Int86 n2; scan(&n2);
-    uint64_t max_d; scanf("%" SCNu64, &max_d);
+    uint64_t max_d;
+    if (scanf("%" SCNu64, &max_d) != 1) {
+        exit(1);
+    }
     Int86 max_d_ = {0}; add(&max_d_, max_d);
 
     Int86 two = {2, 0};

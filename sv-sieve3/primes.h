@@ -157,7 +157,7 @@ void mul_add(Int86 *a, unsigned b, uint64_t c) {
 }
 
 void shr(Int86 *a) {
-    a->low = ((a->high & 1) << (LOW_BITS - 1)) | (a->low >> 1);
+    a->low = ((uint32_t)(a->high & 1) << (LOW_BITS - 1)) | (a->low >> 1);
     a->high >>= 1;
 }
 
@@ -336,7 +336,7 @@ void i86_fill_bit_sieve_seg_p(
             sieve[i >> 3] &= (uint8_t)~(1U << (i & 7));
         }
         add(&m, incs[i]);
-        p += incs[i] << 1;
+        p += (uint64_t)incs[i] << 1;
     }
 }
 
