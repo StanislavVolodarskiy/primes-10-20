@@ -16,7 +16,7 @@ def main():
     p2 = 20
     f = 20
     for n2 in map(round, np.geomspace(10. ** p1, 10. ** p2, 1 + f * (p2 - p1))):
-        n1 = max(0, n2 - step)
+        n1 = max(0, n2 - 2 * step)
         scheme.update({(n1, n2): 1})
 
     def command(n1, n2):
